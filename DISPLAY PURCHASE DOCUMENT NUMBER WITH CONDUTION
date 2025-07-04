@@ -1,0 +1,80 @@
+REPORT ZPRINT_PRG_SF4 LINE-COUNT 30(2).
+*
+*TYPES: BEGIN OF LTY_MARA,
+*  MATNR TYPE MARA-MATNR,
+*  ERSDA TYPE MARA-ERSDA,
+*  ERNAM TYPE MARA-ERNAM,
+*  MTART TYPE MARA-MTART,
+*  END OF LTY_MARA.
+*
+* DATA: IT_MARA TYPE TABLE OF LTY_MARA.
+*  DATA:WA_MARA TYPE  LTY_MARA.
+*
+*  SELECT MATNR ERSDA ERNAM MTART FROM MARA INTO TABLE IT_MARA .
+*
+*    LOOP AT IT_MARA INTO WA_MARA.
+*      WRITE:/ WA_MARA-MATNR,
+*      WA_MARA-ERSDA,
+*      WA_MARA-ERNAM,
+*      WA_MARA-MTART.
+*    ENDLOOP.
+*
+*Based on the given purchase document numbers, to display the purchase document numbers,document dates
+*and vendor numbers by using classical report events and validate the given pur.doc number
+*    TABLES NAME:-EKKO
+*    1-purchase document numbers:-EBELN
+*    2-Document dates:-AEDAT
+*    3-vendor numbers :-LIFNR  "REPORTE(BASIC).PATTERMS:-ZB01 AND 0001.
+
+
+*CONDITION:-0001.
+
+TYPES: BEGIN OF LTY_EKKO,
+         EBELN TYPE EKKO-EBELN,
+         AEDAT TYPE EKKO-AEDAT,
+         LIFNR TYPE EKKO-LIFNR,
+         ZTERM TYPE EKKO-ZTERM,
+       END OF LTY_EKKO.
+
+DATA: IT_EKKO TYPE TABLE OF LTY_EKKO,
+      WA_EKKO TYPE LTY_EKKO.
+
+SELECT EBELN AEDAT LIFNR ZTERM FROM EKKO INTO TABLE IT_EKKO. "WHERE ZTERM = '0001'.
+
+
+IF SY-SUBRC = 0.
+
+  LOOP AT IT_EKKO INTO WA_EKKO WHERE ZTERM = '0001'.
+
+*    IF WA_EKKO-ZTERM = '0001'.
+
+
+      WRITE:/  WA_EKKO-EBELN,
+    WA_EKKO-AEDAT,
+
+    WA_EKKO-LIFNR,
+    WA_EKKO-ZTERM.
+*   SY-UZEIT,SY-UNAME.
+*    ENDIF.
+  ENDLOOP.
+ELSE.
+  WRITE:/ 'DATA NOT FOUND'.
+
+ENDIF.
+
+END-OF-PAGE.
+WRITE:/ SY-UZEIT,SY-UNAME.
+
+
+*
+*LOOP AT IT_EKKO INTO WA_EKKO.
+*  IF SY-SUBRC = 0 .
+*  WRITE:/ WA_EKKO-EBELN,
+*  WA_EKKO-AEDAT,
+*
+*  WA_EKKO-LIFNR.
+*  ELSE.
+*    WRITE:/ 'NO DATA'.
+*    ENDIF.
+*
+*ENDLOOP.
